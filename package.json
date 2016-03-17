@@ -1,22 +1,16 @@
 {
   "name": "stepic-parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Stepic parser module",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/luixo/stepic-parser.git"
   },
   "author": "luixo",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/luixo/stepic-parser/issues"
-  },
-  "homepage": "https://github.com/luixo/stepic-parser#readme",
   "dependencies": {
-    "client-oauth2": "^2.0.0"
+    "client-oauth2": "^2.0.0",
+    "fs.promised": "^3.0.0"
   }
 }

@@ -1,24 +1,23 @@
 'use strict';
-const ClientOAuth2 = require('client-oauth2');
+require('./polyfill.js');
 const credentials = require('./credentials.json');
+const auth = require('./auth.js');
+const fs = require('fs.promised');
 
-const stepicAuth = new ClientOAuth2({
-	clientId: credentials.id,
-	clientSecret: credentials.secret,
-	accessTokenUri: 'https://stepic.org/oauth2',
-	authorizationGrants: ['credentials']
-});
+console.logLevel = 1;
 
-stepicAuth.credentials.getToken().then(data => {
-	getCoursePage(1).then(res => console.log(res.courses[0].id + '(1)')).catch(rej => console.warn(rej));
-}).catch(err => console.warn(err));
-
-const getCoursePage = index =>
-	stepicAuth.request({
-		method: 'get',
-		url: 'https://stepic.org/api/courses',
-		query: {
-			page: index
-			//enrolled: true
-		}
-	}).then(res => res.body);
+auth.setCredentials(credentials)
+	.then(() => {
+		const tasks = require('./tasks.js');
+		console.debug('Starting tasks.', 0);
+		return Promise.all(tasks.list.filter(taskName => /test/.test(taskName)).map(taskName =>
+			tasks[taskName]().then(res => {
+				console.debug(`Task ${taskName} completed!`, 1);
+				return Promise.resolve(res);
+			}).catch(err => {
+				console.debug(`Task ${taskName} failed with ${err} :(`, 0);
+			})
+		))
+	})
+	.then(() => console.debug('All tasks completed.', 0))
+	.catch(err => console.debug(`Epic error: ${typeof err === 'object' ? err.message || err : err}`, 0));
