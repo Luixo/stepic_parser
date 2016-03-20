@@ -10,7 +10,7 @@ module.exports = class {
 		console.debug(`Asked for page ${page}${enrolled ? ' with enrolled courses' : ''}.`);
 		if (!obj.enrolled)
 			delete obj.enrolled;
-		return req(this.token, 'courses', obj);
+		return req(this.token, 'courses', {query: obj});
 	}
 	pages(enrolled) {
 		let result = [];

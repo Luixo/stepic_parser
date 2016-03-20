@@ -7,6 +7,6 @@ module.exports = class {
 	}
 	progress(progress) {
 		console.debug(`Asked for progress ${progress}.`);
-		return req(this.token, 'progresses', {'ids[]': '79-1241' });
+		return req(this.token, 'progresses', {query: {'ids[]': '79-1241' }});
 	}
 };

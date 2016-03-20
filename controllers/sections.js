@@ -7,10 +7,10 @@ module.exports = class {
 	}
 	section(section) {
 		console.debug(`Asked for section ${section}.`, 2);
-		return req(this.token, 'sections', `ids[]=${section}`);
+		return req(this.token, 'sections', {query: `ids[]=${section}`});
 	}
-	/*sections(sections) {
+	sections(sections) {
 		console.debug(`Asked for sections ${sections.join(', ')}.`, 2);
-		return req(this.token, 'sections', sections.map(sec => `ids[]=${sec}`).join('&'));
-	}*/
+		return req(this.token, 'sections', {query: sections.map(sec => [`ids[]`, sec])}).then(data => data.sections);
+	}
 };

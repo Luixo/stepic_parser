@@ -4,7 +4,7 @@ const credentials = require('./credentials.json');
 const auth = require('./auth.js');
 const fs = require('fs.promised');
 
-console.logLevel = 1;
+console.logLevel = credentials.logLevel || 0;
 
 auth.setCredentials(credentials)
 	.then(() => {
@@ -15,7 +15,7 @@ auth.setCredentials(credentials)
 				console.debug(`Task ${taskName} completed!`, 1);
 				return Promise.resolve(res);
 			}).catch(err => {
-				console.debug(`Task ${taskName} failed with ${err} :(`, 0);
+				console.debug(`Task ${taskName} failed with: ${err}.`, 0);
 			})
 		))
 	})

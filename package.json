@@ -1,6 +1,6 @@
 {
   "name": "stepic-parser",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Stepic parser module",
   "main": "index.js",
   "repository": {
