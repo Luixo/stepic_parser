@@ -78,16 +78,6 @@ let tasks = {
 						return a.course > b.course ? 1 : -1;
 					})
 					.sort((a, b) => {
-						if (a.start && b.start)
-							return (new Date(a.start) - new Date(b.start));
-						if (!a.start && !b.start) {
-							if (a.course === b.course)
-								return Number(a.no) - Number(b.no);
-							return a.course > b.course ? 1 : -1;
-						}
-						return a.start ? -1 : 1;
-					})
-					.sort((a, b) => {
 						if (a.end && b.end)
 							return (new Date(a.end) - new Date(b.end));
 						if (!a.end && !b.end) {
@@ -96,6 +86,16 @@ let tasks = {
 							return a.course > b.course ? 1 : -1;
 						}
 						return a.end ? -1 : 1;
+					})
+					.sort((a, b) => {
+						if (a.start && b.start)
+							return (new Date(a.start) - new Date(b.start));
+						if (!a.start && !b.start) {
+							if (a.course === b.course)
+								return Number(a.no) - Number(b.no);
+							return a.course > b.course ? 1 : -1;
+						}
+						return a.start ? -1 : 1;
 					})
 					.filter(section => excluded.indexOf(section.course) === -1)
 					.map(({course, no, start, end, cost, score, title}) => {
@@ -109,20 +109,18 @@ let tasks = {
 			)
 			.then(sections => fs.writeFile('../out/sections.csv', sections))
 	},
-	'example-table-submission': () => {
+	'table-submission': () => {
 		let rows = [
-			'был открыт английским ботаником',
-			'протекает во всех агрегатных состояниях вещества',
-			'подтверждает хаотичность теплового движения',
-			'скорость протекания зависит от температуры',
-			'обеспечивает схожий газовый состав атмосферы в пределах тропосферы'
+			"согласно модели Томсона, атом представляет из себя «сгусток» положительно заряженной матери, в которой вкраплениями сосредоточены частицы, обладающие отрицательным зарядом",
+			"опыт Резерфорда послужил экспериментальным подтверждением гипотез Томсона",
+			"результаты опыта Резерфорда свидетельствуют о том, что положительный заряд сосредоточен в центре атома (в ядре), которое по своим размерам много меньше размеров самого атома",
+			"электроны находятся в непрерывном движении вокруг ядра на расстоянии много большем диаметра ядра",
+			"носителем положительного заряда является протон",
+			"число протонов  в атоме всегда равняется числу нейтронов",
+			"масса атома водорода примерно в 2 раза превосходит массу протона"
 		];
-		let columns = [
-			'Диффузия',
-			'Броуновское движение',
-			'Нет верного варианта'
-		];
-		return controllers.submissions.tryAll('81192', controllers.submissions.tableObject(rows, columns, '010 100 ??0 ??0 ??0'));
+		let columns = ["верно", "неверно"];
+		return controllers.submissions.tryAll(95221, controllers.submissions.tableObject(rows, columns, '!1 !? !1 !1 !1 !? !0'));
 	},
 	'example-choice-submission': () => {
 		let rows = [
@@ -133,6 +131,17 @@ let tasks = {
 			"В твёрдом состоянии молекулы взаимодействуют  друг с другом менее интенсивно, чем в жидком."
 		];
 		return controllers.submissions.tryAll(83218, controllers.submissions.choiceObject(rows, '101??'), {
+			waitMin: 12,
+			waitRandom: 4
+		})
+	},
+	'math-choice': () => {
+		let rows = [
+			"Величина максимального потока сети равна $M$. В такой сети могут одновременно существовать два разреза с пропусными способностями $2M$ и $\\frac{3}{2}M$",
+			"Пусть есть сеть, в которой несколько истоков и стоков. Добавим две вершины и из одной направим ребра с бекснонечной пропускной способностью в истоки, а в другую добавим входящие рёбра с бесконечной пропускной способностью из стоков. Пусть эти вершины будут единственными стоком и истоком в новой сети. Максимальные потоки в двух сетях совпадают.",
+			"Алгоритм Форда Фалкерсона находит величину максимального потока в произвольной сети.",
+			"Предположим, что есть n сетей с максимальными потоками $M_1$, $M_2$, ..., $M_n$. Построим новую сеть, добавив ребро из $i$ стока в сток $i + 1$ пропускной способностью $c$. Максимальной поток в такой сети $min(M_1, M_2, ..., M_n)$."];
+		return controllers.submissions.tryAll(95876, controllers.submissions.choiceObject(rows, '1???'), {
 			waitMin: 12,
 			waitRandom: 4
 		})

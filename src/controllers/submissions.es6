@@ -51,18 +51,21 @@ module.exports = class {
 	variants(str) {
 		if (typeof str === 'string')
 			str = [str];
+		str = str.map(sub => sub.replace(/!1/g, '10').replace(/!0/g, '01'));
+		while (/!\?/.test(str[0]))
+			str = str.map(substr => substr.replace('!?', '10')).concat(str.map(substr => substr.replace('!?', '01')));
 		while(/\?/.test(str[0]))
 			str = str.map(substr => substr.replace('?', '0')).concat(str.map(substr => substr.replace('?', '1')));
 		return str;
 	}
-	tryAll(step, objects, {waitMin, waitRandom = 0} = {}) {
+	tryAll(step, objects, {waitMin, waitRandom = 0} = {waitMin: 12, waitRandom: 4}) {
 		console.debug(`Trying ${objects.length} variants${waitMin ? ` with minimum ${waitMin} and additionally ${waitRandom} seconds` : ''}.`, 2);
 		return Promise.until((index = 0) => {
 			console.debug(`Variant ${index}.`, 2);
-			return this.submit(step, objects[index]).then(res => (index < objects.length - 1 && res.status === 'wrong')
+			return this.submit(step, objects[index]).then(res => (index < objects.length - 1 && res.status !== 'correct')
 				? (waitMin ? Promise.timeout(waitMin*1000 + Math.random()*waitRandom*1000) : Promise.resolve()).then(() => Promise.reject(++index))
 				: Promise.resolve(res))
-		}).then(res => res.status === 'wrong' ? Promise.reject(`Trying failed with ${objects.length} alternatives tried.`) : Promise.resolve(res))
+		}).then(res => res.status !== 'correct' ? Promise.reject(`Trying failed with ${objects.length} alternatives tried.`) : Promise.resolve(res))
 	}
 	submit(step, resolver) {
 		let attempt;
